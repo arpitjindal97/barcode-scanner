@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -31,6 +30,7 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     private var flash: Boolean = false
     var scan_result: String? = null
+    var sendButtonPressed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +84,10 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Scan Result")
         builder.setMessage(scan_result)
+
         builder.setPositiveButton("Send", sendButtonListener)
+
+        builder.setOnDismissListener(dialogDismissListener)
 
         var alert1 = builder?.create()
 
@@ -115,13 +118,20 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
     }
 
+    private var dialogDismissListener = DialogInterface.OnDismissListener { dialog: DialogInterface? ->
+        if (!sendButtonPressed) {
+            ResumeCameraPreview()
+        }
+    }
 
     private var sendButtonListener = DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
         Log.v("arpit", "button clicked")
 
+        sendButtonPressed = true
+
         lateinit var progressdialog: AlertDialog
 
-        class MyAsyncTask() : AsyncTask<Void, Void, String>() {
+        class MyAsyncTask : AsyncTask<Void, Void, String>() {
 
             override fun doInBackground(vararg params: Void?): String {
 
@@ -144,6 +154,9 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
+
+                sendButtonPressed = false
+
                 Log.v(TAG, result)
 
                 progressdialog.findViewById<TextView>(R.id.progress_title).text = "Sent"
@@ -155,12 +168,13 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
                     ResumeCameraPreview()
                 }
 
+
             }
 
 
         }
 
-        var task = MyAsyncTask().execute()
+        MyAsyncTask().execute()
 
     }
 
