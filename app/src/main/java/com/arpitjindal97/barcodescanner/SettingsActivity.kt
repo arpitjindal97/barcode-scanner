@@ -57,10 +57,10 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             addPreferencesFromResource(R.xml.pref_general)
             setHasOptionsMenu(true)
 
-            var server = db.Get()
+            val server = db.get()
 
-            (findPreference("ip_address") as EditTextPreference).text = server.ip_address
-            (findPreference("port_number") as EditTextPreference).text = server.port_number
+            (findPreference("ip_address") as EditTextPreference).text = server.ipAddress
+            (findPreference("port_number") as EditTextPreference).text = server.portNumber
 
             bindPreferenceSummaryToValue(findPreference("ip_address"))
             bindPreferenceSummaryToValue(findPreference("port_number"))
@@ -86,9 +86,9 @@ class SettingsActivity : AppCompatPreferenceActivity() {
 
 
             if (preference.key == "ip_address") {
-                db.Update(Server(stringValue, db.Get().port_number))
+                db.update(Server(stringValue, db.get().portNumber))
             } else {
-                db.Update(Server(db.Get().ip_address, stringValue))
+                db.update(Server(db.get().ipAddress, stringValue))
             }
 
             // simple string representation.

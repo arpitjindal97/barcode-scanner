@@ -1,22 +1,16 @@
 package com.arpitjindal97.barcodescanner
 
-class Server {
+class Server(ip: String, port: String) {
 
-    constructor() {}
-    constructor(ip: String, port: String) {
-        ip_address = ip
-        port_number = port
-    }
-
-    lateinit var ip_address: String
-    lateinit var port_number: String
+    var ipAddress: String = ip
+    var portNumber: String = port
 
     var url: String = "temp"
-        get() = "$ip_address:$port_number"
+        get() = "$ipAddress:$portNumber"
 
-    var ResultURL = ""
+    var resultURL = ""
         get() = "http://$url/Result"
 
-    var StatusURL = ""
+    var statusURL = ""
         get() = "http://$url/Status"
 }

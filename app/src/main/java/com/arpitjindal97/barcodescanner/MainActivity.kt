@@ -26,11 +26,12 @@ import okhttp3.RequestBody
 
 class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
-    private var TAG: String = "arpit"
+    private var tag: String = "arpit"
 
     private var flash: Boolean = false
-    var scan_result: String? = null
+    private var result = ResultHolder()
     var sendButtonPressed: Boolean = false
+    private lateinit var progressDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        GetPermissions()
+        getPermissions()
 
     }
 
@@ -74,28 +75,62 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     }
 
-    override fun handleResult(rawResult: Result?) {
-        // Do something with the result here
+    private fun prepareProgressDialog() {
+        val progressDialogView =
+                layoutInflater.inflate(R.layout.progressbar_dialog, findViewById(android.R.id.content), false)
+        val builder = AlertDialog.Builder(this)
+        builder.setView(progressDialogView)
+        progressDialog = builder.create()
 
-        scan_result = rawResult?.text
-        Log.v(TAG, rawResult?.text)
-        Log.v(TAG, rawResult?.barcodeFormat.toString())
+        val str = "Sending Result..."
+
+        progressDialogView.findViewById<TextView>(R.id.progress_title).text = str
+        progressDialogView.findViewById<ProgressBar>(R.id.indeterminateBar).isIndeterminate = true
+        progressDialogView.findViewById<ProgressBar>(R.id.indeterminateBar).progress = 0
+        progressDialogView.findViewById<TextView>(R.id.progressCount).text = "0/0"
+        progressDialogView.findViewById<Button>(R.id.progress_dialog_button).isEnabled = false
+        progressDialogView.findViewById<Button>(R.id.progress_dialog_button).setOnClickListener {
+            progressDialog.dismiss()
+            resumeCameraPreview()
+        }
+    }
+
+    private fun stopProgressDialog(result: String) {
+
+        val str: String = if (result == "OK") {
+            "Sent"
+        } else {
+            "Failed !"
+        }
+        progressDialog.findViewById<TextView>(R.id.progress_title).text = str
+        progressDialog.findViewById<ProgressBar>(R.id.indeterminateBar).isIndeterminate = false
+        progressDialog.findViewById<ProgressBar>(R.id.indeterminateBar).progress = 100
+        progressDialog.findViewById<Button>(R.id.progress_dialog_button).isEnabled = true
+    }
+
+    override fun handleResult(rawResult: Result?) {
+
+        // Do something with the result here
+        result.parseResult(rawResult?.text.toString())
+
+        Log.v(tag, rawResult?.text)
+        Log.v(tag, rawResult?.barcodeFormat.toString())
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Scan Result")
-        builder.setMessage(scan_result)
+        builder.setMessage(result.getString())
 
         builder.setPositiveButton("Send", sendButtonListener)
 
         builder.setOnDismissListener(dialogDismissListener)
 
-        var alert1 = builder?.create()
+        val alert1 = builder.create()
 
         alert1.show()
 
     }
 
-    fun ResumeCameraPreview() {
+    private fun resumeCameraPreview() {
         scanner_view?.resumeCameraPreview(this)
     }
 
@@ -110,7 +145,7 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         scanner_view?.stopCamera()
     }
 
-    fun GetPermissions() {
+    private fun getPermissions() {
 
         if (checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -118,91 +153,94 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
     }
 
-    private var dialogDismissListener = DialogInterface.OnDismissListener { dialog: DialogInterface? ->
+    private var dialogDismissListener = DialogInterface.OnDismissListener {
         if (!sendButtonPressed) {
-            ResumeCameraPreview()
+            resumeCameraPreview()
         }
     }
 
-    private var sendButtonListener = DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-        Log.v("arpit", "button clicked")
+    private var sendButtonListener = DialogInterface.OnClickListener { dialog: DialogInterface?, _: Int ->
+        Log.v(tag, "button clicked")
 
         sendButtonPressed = true
 
-        lateinit var progressdialog: AlertDialog
+        class MyAsyncTask : AsyncTask<Void, Int, String>() {
 
-        class MyAsyncTask : AsyncTask<Void, Void, String>() {
-
-            override fun doInBackground(vararg params: Void?): String {
-
-                return if (ServerStatus() == "Running") {
-                    SendResult(scan_result)
-                } else {
-                    "Error"
-                }
-            }
 
             override fun onPreExecute() {
                 super.onPreExecute()
                 dialog?.dismiss()
-                var progressdialog_view = layoutInflater.inflate(R.layout.progressbar_dialog, null)
-                var builder = AlertDialog.Builder(this@MainActivity)
-                builder.setView(progressdialog_view)
-                progressdialog = builder?.create()
-                progressdialog.show()
+                prepareProgressDialog()
+                progressDialog.show()
             }
 
-            override fun onPostExecute(result: String?) {
-                super.onPostExecute(result)
+            override fun doInBackground(vararg params: Void?): String {
 
-                sendButtonPressed = false
+                publishProgress(1)
+                try {
+                    if (serverStatus() == "Running") {
+                        val array = result.getArray()
+                        var i = 0
 
-                Log.v(TAG, result)
+                        while (i < array.size) {
+                            publishProgress(i + 1)
+                            if (sendResult(array[i]) == array[i]) {
+                                i++
+                            }
+                        }
+                        return "OK"
+                    }
+                    return "Error"
 
-                progressdialog.findViewById<TextView>(R.id.progress_title).text = "Sent"
-                progressdialog.findViewById<ProgressBar>(R.id.indeterminateBar).isIndeterminate = false
-                progressdialog.findViewById<ProgressBar>(R.id.indeterminateBar).progress = 100
-                progressdialog.findViewById<Button>(R.id.progress_dialog_button).isEnabled = true
-                progressdialog.findViewById<Button>(R.id.progress_dialog_button).setOnClickListener {
-                    progressdialog.dismiss()
-                    ResumeCameraPreview()
+                } catch (_: Exception) {
+                    return "Error"
                 }
-
-
             }
 
+            override fun onProgressUpdate(vararg values: Int?) {
+                val str = values[0].toString() + "/" + result.getArray().size.toString()
+                progressDialog.findViewById<TextView>(R.id.progressCount).text = str
+            }
 
+            override fun onPostExecute(result: String) {
+                super.onPostExecute(result)
+                sendButtonPressed = false
+                Log.v(tag, result)
+                stopProgressDialog(result)
+            }
         }
 
         MyAsyncTask().execute()
 
     }
 
-    fun ServerStatus(): String {
-        var url = DatabaseHelper(baseContext).Get().StatusURL
+    fun serverStatus(): String {
+        val url = DatabaseHelper(baseContext).get().statusURL
 
-        var request = Request.Builder()
+        val request = Request.Builder()
                 .url(url)
                 .build()
 
-        var client = OkHttpClient()
-        var resp = client.newCall(request).execute()
+        val client = OkHttpClient()
+
+        val resp = client.newCall(request).execute()
         return resp.body()?.string().toString()
 
     }
 
-    fun SendResult(result: String?): String {
+    fun sendResult(str: String): String {
 
-        var url = DatabaseHelper(this).Get().ResultURL
+        val url = DatabaseHelper(this).get().resultURL
 
-        var dataType: MediaType? = MediaType.parse("text/plain;charset=utf-8")
+        val dataType: MediaType? = MediaType.parse("text/plain;charset=utf-8")
 
-        var data = RequestBody.create(dataType, result)
-        var request = Request.Builder().url(url).post(data).build()
 
-        var resp = OkHttpClient().newCall(request).execute()
+        val data = RequestBody.create(dataType, str)
+        val request = Request.Builder().url(url).post(data).build()
 
+        val resp = OkHttpClient().newCall(request).execute()
         return resp.body()?.string().toString()
+
 
     }
 

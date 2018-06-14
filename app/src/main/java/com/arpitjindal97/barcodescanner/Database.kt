@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
-class DatabaseHelper: SQLiteOpenHelper {
-
-    constructor(context: Context) : super(context,"barcode_scanner_arpit",null,1)
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "barcode_scanner_arpit", null, 1) {
 
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -16,10 +14,10 @@ class DatabaseHelper: SQLiteOpenHelper {
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        var query = "CREATE TABLE server ( IP_Address TEXT, Port_Number TEXT )"
+        val query = "CREATE TABLE server ( IP_Address TEXT, Port_Number TEXT )"
         db?.execSQL(query)
 
-        var values  = ContentValues()
+        val values  = ContentValues()
         values.put("IP_Address","ip address of server")
         values.put("Port_Number","port number of server")
 
@@ -27,27 +25,29 @@ class DatabaseHelper: SQLiteOpenHelper {
 
     }
 
-    fun Get() : Server {
+    fun get() : Server {
 
-        var db = writableDatabase
+        val db = writableDatabase
 
-        var cursor = db.rawQuery("select * from server",null)
+        val cursor = db.rawQuery("select * from server",null)
 
         cursor?.moveToFirst()
 
-        return Server(cursor.getString(0),cursor.getString(1))
+        val server = Server(cursor.getString(0),cursor.getString(1))
+        cursor.close()
+        return server
 
     }
-    fun Update(server: Server) {
-        var db: SQLiteDatabase = writableDatabase
+    fun update(server: Server) {
+        val db: SQLiteDatabase = writableDatabase
 
-        var old = Get()
+        val old = get()
 
-        var values = ContentValues()
-        values.put("IP_Address",server.ip_address)
-        values.put("Port_Number",server.port_number)
+        val values = ContentValues()
+        values.put("IP_Address",server.ipAddress)
+        values.put("Port_Number",server.portNumber)
 
-        db.update("server",values,"IP_Address=? AND Port_Number=?", arrayOf(old.ip_address,old.port_number))
+        db.update("server",values,"IP_Address=? AND Port_Number=?", arrayOf(old.ipAddress,old.portNumber))
 
     }
 
