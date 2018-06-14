@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_laptop_black_24dp"
         android:title="@string/pref_header_server"/>
 
+    <header
+        android:fragment="com.arpitjindal97.barcodescanner.SettingsActivity$ScanTypePreferenceFragment"
+        android:icon="@drawable/ic_scan_type_black_24dp"
+        android:title="@string/pref_header_scan_type"/>
+
 </preference-headers>

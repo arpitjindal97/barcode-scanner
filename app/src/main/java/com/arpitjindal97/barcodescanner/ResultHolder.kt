@@ -10,7 +10,7 @@ class ResultHolder {
           str = str + c + "\n"
        }
 
-       str = str.substring(0,str.length-2)
+       str = str.substring(0,str.length-1)
        return str
    }
 

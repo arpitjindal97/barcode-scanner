@@ -1,16 +1,28 @@
 package com.arpitjindal97.barcodescanner
 
-class Server(ip: String, port: String) {
+import android.content.Context
+import android.preference.PreferenceManager
 
-    var ipAddress: String = ip
-    var portNumber: String = port
+class Server {
 
-    var url: String = "temp"
-        get() = "$ipAddress:$portNumber"
+    companion object {
 
-    var resultURL = ""
-        get() = "http://$url/Result"
 
-    var statusURL = ""
-        get() = "http://$url/Status"
+        fun statusURL( context: Context): String {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val ip = sharedPreferences.getString("ip_address", "default")
+            val port = sharedPreferences.getString("port_number", "default")
+
+            return "http://$ip:$port/Status"
+        }
+
+
+        fun resultURL(context: Context): String {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            val ip = sharedPreferences.getString("ip_address", "default")
+            val port = sharedPreferences.getString("port_number", "default")
+
+            return "http://$ip:$port/Result"
+        }
+    }
 }

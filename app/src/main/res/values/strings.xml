@@ -4,12 +4,18 @@
    <string name="title_activity_settings">Settings</string>
 
     <string name="pref_header_server">Server</string>
-
     <string name="pref_title_ip_address">IP Address</string>
-    <string name="pref_default_display_ip">192.168.1.1</string>
-
+    <string name="pref_default_display_ip">Type IP Address</string>
     <string name="pref_title_port_number">Port Number</string>
     <string name="pref_default_display_port">8080</string>
+
+    <string name="pref_header_scan_type">Scan Type</string>
+    <string name="pref_title_scan_type">Scan Type</string>
+    <string-array name="pref_list_scan_type">
+        <item>Normal Text</item>
+        <item>10 IMEI from QR</item>
+    </string-array>
+
     <string name="progressCount">0/0</string>
     <string name="progressDialogOKButton">OK</string>
     <string name="progressTitle">Sending result...</string>

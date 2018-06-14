@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.*
 import android.view.MenuItem
+import android.widget.Toast
 
 
 class SettingsActivity : AppCompatPreferenceActivity() {
@@ -14,7 +15,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         super.onCreate(savedInstanceState)
         setupActionBar()
 
-        db = DatabaseHelper(baseContext)
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val str = sharedPreferences.getString("scan_type", "default value")
+        Toast.makeText(this, str, Toast.LENGTH_LONG).show()
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -48,19 +53,13 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     override fun isValidFragment(fragmentName: String): Boolean {
         return PreferenceFragment::class.java.name == fragmentName
                 || ServerPreferenceFragment::class.java.name == fragmentName
+                || ScanTypePreferenceFragment::class.java.name == fragmentName
     }
-
 
     class ServerPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            addPreferencesFromResource(R.xml.pref_general)
-            setHasOptionsMenu(true)
-
-            val server = db.get()
-
-            (findPreference("ip_address") as EditTextPreference).text = server.ipAddress
-            (findPreference("port_number") as EditTextPreference).text = server.portNumber
+            addPreferencesFromResource(R.xml.pref_server)
 
             bindPreferenceSummaryToValue(findPreference("ip_address"))
             bindPreferenceSummaryToValue(findPreference("port_number"))
@@ -77,27 +76,35 @@ class SettingsActivity : AppCompatPreferenceActivity() {
         }
     }
 
+    class ScanTypePreferenceFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.pref_scan_type)
+
+            bindPreferenceSummaryToValue(findPreference("scan_type"))
+        }
+
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            val id = item.itemId
+            if (id == android.R.id.home) {
+
+                activity.onBackPressed()
+                return true
+            }
+            return super.onOptionsItemSelected(item)
+        }
+    }
+
 
     companion object {
 
-        lateinit var db: DatabaseHelper
         private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference, value ->
             val stringValue = value.toString()
 
 
-            if (preference.key == "ip_address") {
-                db.update(Server(stringValue, db.get().portNumber))
-            } else {
-                db.update(Server(db.get().ipAddress, stringValue))
-            }
-
             // simple string representation.
             preference.summary = stringValue
             true
-        }
-
-        private fun isXLargeTablet(context: Context): Boolean {
-            return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_XLARGE
         }
 
         private fun bindPreferenceSummaryToValue(preference: Preference) {
@@ -111,5 +118,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
                             .getDefaultSharedPreferences(preference.context)
                             .getString(preference.key, ""))
         }
+
+        private fun isXLargeTablet(context: Context): Boolean {
+            return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_XLARGE
+        }
+
+
     }
 }

@@ -215,7 +215,8 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     }
 
     fun serverStatus(): String {
-        val url = DatabaseHelper(baseContext).get().statusURL
+
+        val url = Server.statusURL(this)
 
         val request = Request.Builder()
                 .url(url)
@@ -230,7 +231,7 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     fun sendResult(str: String): String {
 
-        val url = DatabaseHelper(this).get().resultURL
+        val url = Server.resultURL(this)
 
         val dataType: MediaType? = MediaType.parse("text/plain;charset=utf-8")
 
