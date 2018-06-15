@@ -11,6 +11,7 @@
 
     <string name="pref_header_scan_type">Scan Type</string>
     <string name="pref_title_scan_type">Scan Type</string>
+    <string name="pref_default_scan_type">Normal Text</string>
     <string-array name="pref_list_scan_type">
         <item>Normal Text</item>
         <item>10 IMEI from QR</item>

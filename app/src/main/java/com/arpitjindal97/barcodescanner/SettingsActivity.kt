@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.*
 import android.view.MenuItem
-import android.widget.Toast
 
 
 class SettingsActivity : AppCompatPreferenceActivity() {
@@ -14,11 +13,6 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupActionBar()
-
-
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val str = sharedPreferences.getString("scan_type", "default value")
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show()
 
     }
 

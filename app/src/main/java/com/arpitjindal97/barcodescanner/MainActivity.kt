@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     override fun handleResult(rawResult: Result?) {
 
         // Do something with the result here
-        result.parseResult(rawResult?.text.toString())
+        result.parseResult(rawResult?.text.toString(),this)
 
         Log.v(tag, rawResult?.text)
         Log.v(tag, rawResult?.barcodeFormat.toString())
