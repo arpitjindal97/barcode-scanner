@@ -4,9 +4,9 @@
         android:title="General"/>
 
     <EditTextPreference
-        android:capitalize="words"
         android:defaultValue="@string/pref_default_display_ip"
-        android:inputType="textCapWords"
+        android:inputType="numberDecimal"
+        android:digits="0123456789."
         android:key="ip_address"
         android:maxLines="1"
         android:selectAllOnFocus="true"
@@ -14,9 +14,8 @@
         android:title="@string/pref_title_ip_address"/>
 
     <EditTextPreference
-        android:capitalize="words"
         android:defaultValue="@string/pref_default_display_port"
-        android:inputType="textCapWords"
+        android:inputType="numberSigned"
         android:key="port_number"
         android:maxLines="1"
         android:selectAllOnFocus="true"
@@ -33,7 +32,13 @@
     <PreferenceCategory android:title="About" />
 
     <Preference
-        android:title="Author"
-        android:summary="Arpit Agarwal" />
+        android:title="@string/pref_title_open_source"
+        android:key="open_source_lib"
+        android:summary="@string/pref_summary_open_source" />
+
+    <Preference
+        android:title="@string/pref_title_author"
+        android:key="author"
+        android:summary="@string/author_name" />
 
 </PreferenceScreen>
