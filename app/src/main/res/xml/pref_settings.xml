@@ -1,5 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="General"/>
+
     <EditTextPreference
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_ip"
@@ -10,15 +13,27 @@
         android:singleLine="true"
         android:title="@string/pref_title_ip_address"/>
 
-   <EditTextPreference
+    <EditTextPreference
         android:capitalize="words"
         android:defaultValue="@string/pref_default_display_port"
-        android:summary="@string/pref_default_display_port"
         android:inputType="textCapWords"
         android:key="port_number"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pref_title_port_number"/>
+
+    <ListPreference
+        android:defaultValue="@string/pref_default_scan_type"
+        android:entries="@array/pref_list_scan_type"
+        android:entryValues="@array/pref_list_scan_type"
+        android:key="scan_type"
+        android:title="@string/pref_title_scan_type"/>
+
+    <PreferenceCategory android:title="About" />
+
+    <Preference
+        android:title="Author"
+        android:summary="Arpit Agarwal" />
 
 </PreferenceScreen>
