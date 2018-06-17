@@ -9,7 +9,6 @@ import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -25,8 +24,6 @@ import okhttp3.RequestBody
 
 
 class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
-
-    private var tag: String = "arpit"
 
     private var flash: Boolean = false
     private var result = ResultHolder()
@@ -113,9 +110,6 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         // Do something with the result here
         result.parseResult(rawResult?.text.toString(),this)
 
-        Log.v(tag, rawResult?.text)
-        Log.v(tag, rawResult?.barcodeFormat.toString())
-
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
         builder.setTitle("Scan Result")
         builder.setMessage(result.getString())
@@ -160,7 +154,6 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
     }
 
     private var sendButtonListener = DialogInterface.OnClickListener { dialog: DialogInterface?, _: Int ->
-        Log.v(tag, "button clicked")
 
         sendButtonPressed = true
 
@@ -205,7 +198,6 @@ class MainActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             override fun onPostExecute(result: String) {
                 super.onPostExecute(result)
                 sendButtonPressed = false
-                Log.v(tag, result)
                 stopProgressDialog(result)
             }
         }

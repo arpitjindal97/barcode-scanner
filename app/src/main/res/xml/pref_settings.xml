@@ -23,9 +23,9 @@
         android:title="@string/pref_title_port_number"/>
 
     <ListPreference
-        android:defaultValue="@string/pref_default_scan_type"
-        android:entries="@array/pref_list_scan_type"
-        android:entryValues="@array/pref_list_scan_type"
+        android:defaultValue="Normal Text"
+        android:entries="@array/scan_type_list"
+        android:entryValues="@array/scan_type_list"
         android:key="scan_type"
         android:title="@string/pref_title_scan_type"/>
 

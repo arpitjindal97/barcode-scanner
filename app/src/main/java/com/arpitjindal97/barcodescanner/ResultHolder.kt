@@ -34,12 +34,15 @@ class ResultHolder {
     fun parseResult(str: String, context: Context) {
         result.clear()
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val value = sharedPreferences.getString("scan_type", "Normal Text")
+        val scanTypeVal = context.resources.getStringArray(R.array.scan_type_list)
 
-        if (value == "Normal Text") {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val value = sharedPreferences.getString("scan_type", scanTypeVal[0])
+
+
+        if (value == scanTypeVal[0]) {
             add(str)
-        } else if (value == "10 IMEI from QR") {
+        } else if (value == scanTypeVal[1]) {
             try {
                 parseXmlImeiQr(str)
             } catch (_: Exception) {

@@ -56,8 +56,8 @@ class SettingsFragment : PreferenceFragment() {
                             .getString(preference.key, ""))
         }
 
-        private fun bindPreferenceOnClickListener(preference: Preference) {
-            preference.setOnPreferenceClickListener { preference ->
+        private fun bindPreferenceOnClickListener(preferenceInstance: Preference) {
+            preferenceInstance.setOnPreferenceClickListener { preference ->
 
                 if (preference.key == "open_source_lib") {
                     LibsBuilder()

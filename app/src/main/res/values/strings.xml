@@ -3,28 +3,24 @@
 
     <string name="title_activity_settings">Settings</string>
 
-    <string name="pref_header_server">Server</string>
-    <string name="pref_title_ip_address">IP Address</string>
+    <string name="pref_title_ip_address">Server IP Address</string>
     <string name="pref_default_display_ip">Type IP Address</string>
-    <string name="pref_title_port_number">Port Number</string>
+    <string name="pref_title_port_number">Server Port Number</string>
     <string name="pref_default_display_port">8080</string>
 
-    <string name="pref_header_scan_type">Scan Type</string>
-    <string name="pref_title_scan_type">Scan Type</string>
-    <string name="pref_default_scan_type">Normal Text</string>
-    <string-array name="pref_list_scan_type">
+    <string name="pref_title_scan_type">Preferred Scan Type</string>
+    <string-array name="scan_type_list">
         <item>Normal Text</item>
         <item>10 IMEI from QR</item>
     </string-array>
 
     <string name="pref_title_open_source">Open source libraries</string>
     <string name="pref_summary_open_source">Licence details for open-source libraries</string>
-
     <string name="pref_title_author">Author</string>
 
     <string name="progressCount">0/0</string>
     <string name="progressDialogOKButton">OK</string>
-    <string name="progressTitle">Sending result...</string>
+    <string name="progressTitle">Sending result…</string>
 
     <string name="app_description">Small App to send the scan results of Barcode/QR to server.</string>
     <string name="author_url">https://github.com/arpitjindal97</string>
