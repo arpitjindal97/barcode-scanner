@@ -2,7 +2,6 @@ package com.arpitjindal97.barcodescanner
 
 import android.content.Context
 import android.preference.PreferenceManager
-import android.util.Log
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser
 import java.io.ByteArrayInputStream

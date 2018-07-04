@@ -26,4 +26,8 @@
     <string name="author_url">https://github.com/arpitjindal97</string>
     <string name="author_name">Arpit Agarwal</string>
 
+    <string name="progress_title_sending">Sending …</string>
+    <string name="progress_title_failed">Failed !</string>
+    <string name="progress_title_sent">Sent</string>
+
 </resources>
