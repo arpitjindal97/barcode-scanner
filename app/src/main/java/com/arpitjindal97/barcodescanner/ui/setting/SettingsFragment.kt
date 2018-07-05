@@ -1,4 +1,4 @@
-package com.arpitjindal97.barcodescanner
+package com.arpitjindal97.barcodescanner.ui.setting
 
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +7,7 @@ import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.view.MenuItem
+import com.arpitjindal97.barcodescanner.R
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 

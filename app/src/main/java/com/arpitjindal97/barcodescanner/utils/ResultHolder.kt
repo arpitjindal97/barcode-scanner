@@ -1,13 +1,15 @@
-package com.arpitjindal97.barcodescanner
+package com.arpitjindal97.barcodescanner.utils
 
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Xml
+import com.arpitjindal97.barcodescanner.R
 import org.xmlpull.v1.XmlPullParser
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import javax.inject.Inject
 
-class ResultHolder {
+class ResultHolder @Inject constructor(private val context: Context){
 
     private val result = mutableListOf<String>()
 
@@ -30,7 +32,7 @@ class ResultHolder {
     }
 
 
-    fun parseResult(str: String, context: Context) {
+    fun parseResult(str: String) {
         result.clear()
 
         val scanTypeVal = context.resources.getStringArray(R.array.scan_type_list)

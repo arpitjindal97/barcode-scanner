@@ -2,12 +2,16 @@ package com.arpitjindal97.barcodescanner.di
 
 import android.app.Application
 import android.content.Context
+import android.preference.PreferenceManager
 import com.arpitjindal97.barcodescanner.data.network.model.ServerRepository
-import com.arpitjindal97.barcodescanner.data.network.model.Webservice
+import com.arpitjindal97.barcodescanner.data.network.Webservice
+import com.arpitjindal97.barcodescanner.utils.ResultHolder
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -24,22 +28,31 @@ class AppModule(private val app: Application) {
 
     @Provides
     @Singleton
-    @Named("something")
-    fun provideString(): String = "same"
-
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit =
+    fun provideRetrofit(@Named("ServerURL") url: String): Retrofit =
             Retrofit.Builder()
-                    .baseUrl("http://192.168.0.5:8080")
+                    .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
 
     @Provides
     @Singleton
     fun provideWebservice(retrofit: Retrofit): Webservice =
-           retrofit.create(Webservice::class.java)
+            retrofit.create(Webservice::class.java)
 
+    @Provides
+    @Singleton
+    fun provideResultHolder(context: Context): ResultHolder =
+            ResultHolder(context)
 
+    @Provides
+    @Named("ServerURL")
+    fun provideServerURL(context: Context): String {
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val ip = sharedPreferences.getString("ip_address", "default")
+        val port = sharedPreferences.getString("port_number", "default")
+
+        return "http://$ip:$port"
+    }
 }

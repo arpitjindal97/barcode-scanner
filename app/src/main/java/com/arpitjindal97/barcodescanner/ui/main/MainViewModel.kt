@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.arpitjindal97.barcodescanner.data.network.model.ServerRepository
+import com.arpitjindal97.barcodescanner.utils.ResultHolder
 import com.arpitjindal97.barcodescanner.utils.ServerResponse
 import com.arpitjindal97.barcodescanner.utils.ServerStatus
 import com.google.zxing.Result
@@ -11,7 +12,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView
 import javax.inject.Inject
 
 class MainViewModel
-@Inject constructor(private val serverRepository: ServerRepository) :
+@Inject constructor(private val serverRepository: ServerRepository,
+                    private val resultHolder: ResultHolder) :
         ViewModel(), ZXingScannerView.ResultHandler {
 
     private var flash = MutableLiveData<Boolean>()
@@ -38,7 +40,8 @@ class MainViewModel
     }
 
     override fun handleResult(p0: Result?) {
-        result.value = p0.toString()
+        resultHolder.parseResult(p0.toString())
+        result.value = resultHolder.getString()
     }
 
     fun getProgressStatus(): LiveData<ServerStatus> {
@@ -51,9 +54,8 @@ class MainViewModel
 
     fun sendButtonClicked() {
         serverStatus.value = ServerStatus("start_sending")
-        //send to server
-        //Log.i("ARPIT" ,serverRepository.getString())
-        serverRepository.postResult(serverStatus, progressCount,ServerResponse(result.value))
+
+        serverRepository.postResult(serverStatus, progressCount,resultHolder.getArray())
 
     }
 

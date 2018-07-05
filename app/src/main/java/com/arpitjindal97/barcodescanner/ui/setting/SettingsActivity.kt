@@ -1,8 +1,9 @@
-package com.arpitjindal97.barcodescanner
+package com.arpitjindal97.barcodescanner.ui.setting
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import com.arpitjindal97.barcodescanner.R
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
