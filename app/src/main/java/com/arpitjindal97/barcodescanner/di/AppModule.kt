@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = [ViewModelModule::class])
+@Module
 class AppModule(private val app: Application) {
     @Provides
     @Singleton

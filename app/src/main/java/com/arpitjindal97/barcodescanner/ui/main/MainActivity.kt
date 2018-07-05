@@ -35,9 +35,6 @@ class MainActivity : BaseActivity() {
     private lateinit var progressDialog: AlertDialog
     private lateinit var progressDialogView: View
 
-    @Inject
-    lateinit var viewModelFactory : ViewModelProvider.Factory
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,7 +57,7 @@ class MainActivity : BaseActivity() {
 
         MyApplication.appComponent.inject(this)
 
-        viewModel = ViewModelProviders.of(this,viewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.init()
 
 
