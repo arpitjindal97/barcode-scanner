@@ -3,7 +3,6 @@ package com.arpitjindal97.barcodescanner.ui.main
 import android.Manifest
 import android.app.AlertDialog
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.content.Intent
@@ -21,7 +20,6 @@ import com.arpitjindal97.barcodescanner.R
 import com.arpitjindal97.barcodescanner.ui.setting.SettingsActivity
 import com.arpitjindal97.barcodescanner.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
@@ -55,11 +53,13 @@ class MainActivity : BaseActivity() {
                 .setCancelable(false)
                 .create()
 
-        MyApplication.appComponent.inject(this)
+    }
+
+    override fun onStart() {
+
+        super.onStart()
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.init()
-
 
         viewModel.getFlash().observe(this, Observer { _ ->
             toggleFlash()
@@ -75,9 +75,7 @@ class MainActivity : BaseActivity() {
             progressDialogView.findViewById<TextView>(R.id.progressCount).text = count
         })
 
-
     }
-
 
     override fun onCreateOptionsMenu(menuArg: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menuArg)

@@ -2,16 +2,16 @@ package com.arpitjindal97.barcodescanner.ui.main
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import com.arpitjindal97.barcodescanner.MyApplication
 import com.arpitjindal97.barcodescanner.data.network.model.ServerRepository
+import com.arpitjindal97.barcodescanner.ui.base.BaseViewModel
 import com.arpitjindal97.barcodescanner.utils.ResultHolder
 import com.arpitjindal97.barcodescanner.utils.ServerStatus
 import com.google.zxing.Result
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import javax.inject.Inject
 
-class MainViewModel : ViewModel(), ZXingScannerView.ResultHandler {
+class MainViewModel : BaseViewModel(), ZXingScannerView.ResultHandler {
 
     private var flash = MutableLiveData<Boolean>()
     private var result = MutableLiveData<String>()
@@ -24,10 +24,7 @@ class MainViewModel : ViewModel(), ZXingScannerView.ResultHandler {
     @Inject
     lateinit var resultHolder: ResultHolder
 
-    fun init() {
-        flash.value = false
-        serverStatus.value = ServerStatus("sent")
-        progressCount.value = "0/0"
+    init {
         MyApplication.appComponent.inject(this)
     }
 

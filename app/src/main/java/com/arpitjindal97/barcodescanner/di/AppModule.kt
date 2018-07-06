@@ -11,7 +11,6 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -50,8 +49,8 @@ class AppModule(private val app: Application) {
     fun provideServerURL(context: Context): String {
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val ip = sharedPreferences.getString("ip_address", "default")
-        val port = sharedPreferences.getString("port_number", "default")
+        val ip = sharedPreferences.getString("ip_address", "localhost")
+        val port = sharedPreferences.getString("port_number", "8080")
 
         return "http://$ip:$port"
     }
